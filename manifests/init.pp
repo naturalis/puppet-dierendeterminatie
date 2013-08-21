@@ -64,6 +64,12 @@ class dierendeterminatie (
   # Create mysql server
   include mysql::server
 
+  # Add hostname to /etc/hosts, svn checkout requires a resolvable hostname
+  host { 'localhost':
+    ip => '127.0.0.1',
+    host_aliases => [ $hostname ],
+  }
+
   package { 'subversion':
     ensure => installed,
   }
