@@ -56,7 +56,14 @@ class dierendeterminatie (
 ) {
 
   include concat::setup
-  include apache
+  include mysql::php
+
+  class { 'apache':
+    default_mods => true,
+    mpm_module => 'prefork',
+  }
+
+  include apache::mod::php
 
   # Create all virtual hosts from hiera
   class { 'dierendeterminatie::instances': }
@@ -78,7 +85,8 @@ class dierendeterminatie (
     ensure   => latest,
     provider => $repotype,
     source   => $coderepo,
-    require  => [ Class['dierendeterminatie::instances'], Package['subversion'] ],
+#    require  => [ Class['dierendeterminatie::instances'], Package['subversion'] ],
+    require  => [ Package['subversion'] ],
   }
 
   file { 'backupdir':
@@ -87,6 +95,18 @@ class dierendeterminatie (
     mode   => '0700',
     owner  => 'root',
     group  => 'root',
+  }
+
+  file { ['/var/www/dierendeterminatie', '/var/www/dierendeterminatie/www', '/var/www/dierendeterminatie/www/app', '/var/www/dierendeterminatie/www/app/templates','/var/www/dierendeterminatie/www/shared','/var/www/dierendeterminatie/www/shared/media']:
+    require => Vcsrepo[$coderoot],
+    ensure => 'directory',
+    mode   => '0755',
+  }
+
+  file { ['/var/www/dierendeterminatie/www/app/templates/templates_c','/var/www/dierendeterminatie/www/app/templates/cache','/var/www/dierendeterminatie/www/shared/cache','/var/www/dierendeterminatie/www/shared/media/project','/var/www/dierendeterminatie/log/']:
+    require => Vcsrepo[$coderoot],
+    ensure => 'directory',
+    mode   => '0777',
   }
 
   if $backmeup == true {
@@ -106,7 +126,7 @@ class dierendeterminatie (
 
   if $autorestore == true {
     class { 'dierendeterminatie::restore':
-      version     => $::restoreversion,
+      version     => $restoreversion,
       bucket      => $bucket,
       dest_id     => $dest_id,
       dest_key    => $dest_key,

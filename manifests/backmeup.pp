@@ -21,7 +21,7 @@ class dierendeterminatie::backmeup (
     backupdir      => $backupdir,
   }
 
-  duplicity { 'db_backup':
+  duplicity { 'backup':
     directory          => $backupdir,
     bucket             => $bucket,
     dest_id            => $dest_id,
@@ -33,19 +33,12 @@ class dierendeterminatie::backmeup (
     full_if_older_than => $full_if_older_than,
     remove_older_than  => $remove_older_than,
     require            => Class['mysql::backup'],
-    pre_command        => '/usr/local/sbin/mysqlbackup.sh',
+    pre_command        => '/usr/local/sbin/configbackup.sh && /usr/local/sbin/mysqlbackup.sh',
   }
 
-  duplicity { 'data_backup':
-    directory          => $backupdir,
-    bucket             => $bucket,
-    dest_id            => $dest_id,
-    dest_key           => $dest_key,
-    cloud              => $cloud,
-    pubkey_id          => $pubkey_id,
-    hour               => $backuphour,
-    minute             => $backupminute,
-    pre_command        => '/usr/local/sbin/databackup.sh',
-  }
-
+  file { "/usr/local/sbin/configbackup.sh":                                                                                                                                        
+    content => template('dierendeterminatie/configbackup.sh.erb'),                                                                                                                                    
+    mode    => '0755',                                                                                                                                                                  
+  }                                                                                                                                                                                     
+                                                                                                                                                                                
 }
