@@ -85,8 +85,7 @@ class dierendeterminatie (
     ensure   => latest,
     provider => $repotype,
     source   => $coderepo,
-#    require  => [ Class['dierendeterminatie::instances'], Package['subversion'] ],
-    require  => [ Package['subversion'] ],
+    require  => [ Package['subversion'],Host['localhost'] ],
   }
 
   file { 'backupdir':
