@@ -96,13 +96,13 @@ class dierendeterminatie (
     group  => 'root',
   }
 
-  file { ['/var/www/dierendeterminatie', '/var/www/dierendeterminatie/www', '/var/www/dierendeterminatie/www/app', '/var/www/dierendeterminatie/www/app/templates','/var/www/dierendeterminatie/www/shared','/var/www/dierendeterminatie/www/shared/media']:
+  file { ['/var/www/dierendeterminatie', '/var/www/dierendeterminatie/www', '/var/www/dierendeterminatie/www/admin', '/var/www/dierendeterminatie/www/admin/templates', '/var/www/dierendeterminatie/www/app', '/var/www/dierendeterminatie/www/app/templates','/var/www/dierendeterminatie/www/shared','/var/www/dierendeterminatie/www/shared/media']:
     require => Vcsrepo[$coderoot],
     ensure => 'directory',
     mode   => '0755',
   }
 
-  file { ['/var/www/dierendeterminatie/www/app/templates/templates_c','/var/www/dierendeterminatie/www/app/templates/cache','/var/www/dierendeterminatie/www/shared/cache','/var/www/dierendeterminatie/www/shared/media/project','/var/www/dierendeterminatie/log/']:
+  file { ['/var/www/dierendeterminatie/www/app/templates/templates_c','/var/www/dierendeterminatie/www/app/templates/cache','/var/www/dierendeterminatie/www/shared/cache','/var/www/dierendeterminatie/www/shared/media/project','/var/www/dierendeterminatie/log/', '/var/www/dierendeterminatie/www/admin/templates/templates_c', '/var/www/dierendeterminatie/www/admin/templates/cache']:
     require => Vcsrepo[$coderoot],
     ensure => 'directory',
     mode   => '0777',
