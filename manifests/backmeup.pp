@@ -32,13 +32,14 @@ class dierendeterminatie::backmeup (
     minute             => $backupminute,
     full_if_older_than => $full_if_older_than,
     remove_older_than  => $remove_older_than,
-    require            => Class['mysql::backup'],
     pre_command        => '/usr/local/sbin/configbackup.sh && /usr/local/sbin/mysqlbackup.sh',
+    require            => Class['mysql::backup'],
   }
 
   file { "/usr/local/sbin/configbackup.sh":                                                                                                                                        
     content => template('dierendeterminatie/configbackup.sh.erb'),                                                                                                                                    
-    mode    => '0755',                                                                                                                                                                  
+    mode    => '0700',                                                                                                                                                                  
   }                                                                                                                                                                                     
                                                                                                                                                                                 
 }
+

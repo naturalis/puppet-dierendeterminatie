@@ -28,27 +28,25 @@ class dierendeterminatie::restore (
 
   file { "/usr/local/sbin/configrestore.sh":
     content => template('dierendeterminatie/configrestore.sh.erb'),
-    mode    => '0755',
+    mode    => '0700',
   }
 
   exec { 'duplicityrestore.sh':
-    require => File['/usr/local/sbin/duplicityrestore.sh','/usr/local/sbin/configrestore.sh','/usr/local/sbin/mysqlrestore.sh'],
     command => '/bin/bash /usr/local/sbin/duplicityrestore.sh',
     path => '/usr/local/sbin:/usr/bin:/usr/sbin:/bin',
+    require => File['/usr/local/sbin/duplicityrestore.sh','/usr/local/sbin/configrestore.sh','/usr/local/sbin/mysqlrestore.sh'],
   }
 
   exec { 'mysqlrestore.sh':
-    require => Exec['duplicityrestore.sh'],
-#    require => File['/tmp/restore/mysql_backup.sql.bz2','/usr/local/sbin/configrestore.sh','/usr/local/sbin/mysqlrestore.sh'],
     command => '/bin/bash /usr/local/sbin/mysqlrestore.sh',
     path => '/usr/local/sbin:/usr/bin:/usr/sbin:/bin',
+    require => Exec['duplicityrestore.sh'],
   }
 
   exec { 'configrestore.sh':
-    require => Exec['duplicityrestore.sh'],
-#    require => File['/tmp/restore/app_configuration.php','/tmp/restore/admin_configuration.php','/usr/local/sbin/configrestore.sh','/usr/local/sbin/mysqlrestore.sh'],
     command => '/bin/bash /usr/local/sbin/configrestore.sh',
     path => '/usr/local/sbin:/usr/bin:/usr/sbin:/bin',
+    require => Exec['duplicityrestore.sh'],
   }
 
 }

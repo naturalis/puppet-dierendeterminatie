@@ -53,6 +53,21 @@ class dierendeterminatie (
   $coderepo = 'svn://dev2.etibioinformatics.nl/linnaeus_ng/trunk',
   $repotype = 'svn',
   $coderoot = '/var/www/dierendeterminatie',
+  $webdirs = ['/var/www/dierendeterminatie',
+	      '/var/www/dierendeterminatie/www',
+	      '/var/www/dierendeterminatie/www/admin',
+	      '/var/www/dierendeterminatie/www/admin/templates',
+	      '/var/www/dierendeterminatie/www/app',
+	      '/var/www/dierendeterminatie/www/app/templates',
+	      '/var/www/dierendeterminatie/www/shared',
+	      '/var/www/dierendeterminatie/www/shared/media'],
+  $rwwebdirs = ['/var/www/dierendeterminatie/www/app/templates/templates_c',
+	        '/var/www/dierendeterminatie/www/app/templates/cache',
+	        '/var/www/dierendeterminatie/www/shared/cache',
+	        '/var/www/dierendeterminatie/www/shared/media/project',
+	        '/var/www/dierendeterminatie/log/',
+	        '/var/www/dierendeterminatie/www/admin/templates/templates_c',
+	        '/var/www/dierendeterminatie/www/admin/templates/cache'],
 ) {
 
   include concat::setup
@@ -96,16 +111,16 @@ class dierendeterminatie (
     group  => 'root',
   }
 
-  file { ['/var/www/dierendeterminatie', '/var/www/dierendeterminatie/www', '/var/www/dierendeterminatie/www/admin', '/var/www/dierendeterminatie/www/admin/templates', '/var/www/dierendeterminatie/www/app', '/var/www/dierendeterminatie/www/app/templates','/var/www/dierendeterminatie/www/shared','/var/www/dierendeterminatie/www/shared/media']:
-    require => Vcsrepo[$coderoot],
-    ensure => 'directory',
-    mode   => '0755',
+  file { $webdirs:
+    ensure 	=> 'directory',
+    mode   	=> '0755',
+    require 	=> Vcsrepo[$coderoot],
   }
 
-  file { ['/var/www/dierendeterminatie/www/app/templates/templates_c','/var/www/dierendeterminatie/www/app/templates/cache','/var/www/dierendeterminatie/www/shared/cache','/var/www/dierendeterminatie/www/shared/media/project','/var/www/dierendeterminatie/log/', '/var/www/dierendeterminatie/www/admin/templates/templates_c', '/var/www/dierendeterminatie/www/admin/templates/cache']:
-    require => Vcsrepo[$coderoot],
-    ensure => 'directory',
-    mode   => '0777',
+  file { $rwwebdirs:
+    ensure 	=> 'directory',
+    mode   	=> '0777',
+    require 	=> File[$webdirs],
   }
 
   if $backmeup == true {
@@ -134,3 +149,4 @@ class dierendeterminatie (
     }
   }
 }
+
