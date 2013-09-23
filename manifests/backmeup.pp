@@ -15,12 +15,6 @@ class dierendeterminatie::backmeup (
 {
   notify {'Backup enabled':}
 
-  class { 'mysql::backup':
-    backupuser     => 'myuser',
-    backuppassword => 'mypassword',
-    backupdir      => $backupdir,
-  }
-
   duplicity { 'backup':
     directory          => $backupdir,
     bucket             => $bucket,

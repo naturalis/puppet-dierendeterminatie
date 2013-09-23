@@ -122,6 +122,14 @@ class dierendeterminatie (
     mode   	=> '0777',
     require 	=> File[$webdirs],
   }
+                                                                                                                                                                                                       
+  if ($backmeup == true) or ($autorestore == true) {
+    class { 'mysql::backup':                                                                                                                                                                                           
+      backupuser     => 'myuser',                                                                                                                                                                                      
+      backuppassword => 'mypassword',                                                                                                                                                                                  
+      backupdir      => $backupdir,                                                                                                                                                                                    
+    }     
+  }
 
   if $backmeup == true {
     class { 'dierendeterminatie::backmeup':
